@@ -1,0 +1,58 @@
+name: 内容建议
+description: 缺少某类插件开发经验，或希望新增/调整模块
+title: "[content] "
+labels: ["content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        经验库按能力模块组织。请说明你遇到的任务，以及现有文档缺哪一块。
+  - type: dropdown
+    id: module
+    attributes:
+      label: 相关模块
+      options:
+        - 不确定 / 新增模块
+        - 00 快速开始
+        - 01 概念地图
+        - 02 插件解剖与加载
+        - 03 Host 工具
+        - 04 Client 槽位与 bundle
+        - 05 构建与自检
+        - 06 安装调试与升级
+        - 07 发布与 Hub
+        - 08 引擎、持久化与后台任务
+        - 09 测试策略
+        - 10 国际化与发现性
+        - 11 安全与权限
+        - 12 版本兼容与踩坑
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你遇到的任务或问题
+      description: 描述场景与卡点，不必贴完整代码
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 希望补充什么
+      description: 现象、原因、做法，或一个最小示例
+    validations:
+      required: true
+  - type: input
+    id: references
+    attributes:
+      label: 参考链接（可选）
+      description: 公开文档、issue 或可公开的最小仓库
+    validations:
+      required: false
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 隐私确认
+      options:
+        - label: 我确认内容不含个人路径、密钥、账号或私有仓库信息
+          required: true

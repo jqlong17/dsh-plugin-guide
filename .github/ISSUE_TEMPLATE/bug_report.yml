@@ -1,0 +1,56 @@
+name: 文档问题
+description: 某篇文档写错了、过时了，或按步骤跑不通
+title: "[docs] "
+labels: ["docs"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。请尽量给出可复现的信息；不要粘贴密钥、账号或私有仓库内容。
+  - type: input
+    id: page
+    attributes:
+      label: 文档与章节
+      description: 文件名 + 小节标题
+      placeholder: 05-构建产物与自检 / 客户端产物合同检查
+    validations:
+      required: true
+  - type: input
+    id: dsh-version
+    attributes:
+      label: dsh 版本
+      description: 输出 `dsh --version`
+      placeholder: 0.2.2-rc.1
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际发生了什么
+      description: 报错、输出、截图（不要包含个人信息）
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 你预期是什么
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 命令或操作顺序
+      placeholder: |
+        1. npm run build
+        2. dsh plugin --profile web add ...
+        3. 重启后 ...
+    validations:
+      required: false
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 隐私确认
+      options:
+        - label: 我确认内容不含个人路径、密钥、账号或私有仓库信息
+          required: true

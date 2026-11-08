@@ -1,0 +1,61 @@
+{
+  "name": "my-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A minimal DeepSeek Harness plugin: one tool and one panel.",
+  "type": "module",
+  "main": "./lib/index.js",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "types": "./src/client/index.ts",
+      "default": "./lib/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-sidebar"
+      ],
+      "platform": "web"
+    },
+    "hub": {
+      "summary": "最小 dsh 插件示例：一个工具 + 一个面板。"
+    }
+  },
+  "scripts": {
+    "build": "npm run build:host && npm run build:client",
+    "build:host": "node ./scripts/build-host.mjs",
+    "build:client": "node ./scripts/build-client.mjs",
+    "check:client": "node ./scripts/check-client.mjs",
+    "prepack": "npm run build"
+  },
+  "files": [
+    "src",
+    "lib",
+    "scripts",
+    "cordis.yml",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "peerDependencies": {
+    "@deepseek-ai/cordis": ">=4.0.0",
+    "@deepseek-ai/dsh-tools": ">=0.2.2-rc.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  },
+  "engines": {
+    "dsh": ">=0.2.2-rc.1"
+  },
+  "license": "MIT"
+}

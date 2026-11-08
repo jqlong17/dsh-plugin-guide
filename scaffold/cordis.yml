@@ -1,0 +1,4 @@
+# Standalone patch for debugging: dsh --patch ./cordis.yml
+- insert:
+    - id: my-plugin
+      name: './lib/index.js'
