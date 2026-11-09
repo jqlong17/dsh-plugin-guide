@@ -100,3 +100,52 @@ export function apply(ctx: Context) {
 ## 自检
 
 打包后用 `node:vm` 跑一遍：loader 记录恰好一条、`id` 正确、`factory` 是函数、`require` 集合只有平台种子、`apply` 注册了预期槽位。实现见 [05](05-构建产物与自检.md)。
+
+## 一个能力，多个入口
+
+成熟的插件往往不止一个入口：右侧栏 tab、主区页面、设置页、斜杠命令，可以指向同一份数据和同一个 RPC。做法是每个 surface 单独 `ctx.effect` 注册，共享组件与数据层：
+
+```ts
+ctx.effect(() => registerSidebarTab(ctx), 'my-plugin: sidebar')
+ctx.effect(() => registerSettingsCard(ctx), 'my-plugin: settings')
+```
+
+注意：
+
+- 每个入口都要有独立的三态（加载/空/错误），不要假设另一个入口已经加载过数据；
+- 设置页写入后，其他入口要能感知变化（重新拉取或监听事件）；
+- 入口越多，越要统一 panel id 与文案 key，避免同一个功能四个名字。
+
+## 用宿主的 CSS 变量，不要硬编码颜色
+
+面板会跟随亮/暗主题。直接写 `#fff`、`#333` 在暗色下会瞎。优先使用宿主设计 token：
+
+```ts
+const card = {
+  background: 'var(--dsw-alias-bg-layer-1, #fff)',
+  color: 'var(--dsw-alias-label-primary, inherit)',
+  border: '1px solid var(--dsw-alias-border-l2, #e5e7eb)',
+  borderRadius: 12,
+}
+```
+
+变量名以当前 dsh 版本的设计系统为准；`var(--x, fallback)` 保证旧版本也有兜底。
+
+## 经典 JSX 转换的坑
+
+如果构建使用 classic JSX（`jsx: 'transform'`），产物里是 `React.createElement(...)`，但 bundle 的 `factory(require)` 不会自动注入 `React`。症状是面板渲染时 `ReferenceError: React is not defined`。两种修法：
+
+- 推荐：`jsx: 'automatic'`，走 `react/jsx-runtime`；
+- 或保留 classic，但在包装器里显式绑定：
+
+```js
+window.__ModuleLoader__.load({
+  id: 'my-plugin',
+  factory: (require) => {
+    var module = { exports: {} }; var exports = module.exports;
+    var React = require('react')   // classic JSX 需要
+    /* bundle */
+    return module.exports;
+  }
+})
+```

@@ -57,3 +57,50 @@ Hub/安装列表的展示名来自 locale，检索命中来自 `keywords` 与 `d
 ## 不要发布的东西
 
 原型、实验分支、带本地绝对路径的产物、只给自己用的数据。归档目录只保留源码，不参与发布。
+
+## 图标与社会化预览
+
+安装列表和 Hub 卡片会用到图标：
+
+```jsonc
+{
+  "icon": "icon.svg",
+  "files": ["icon.svg", "lib", "locale", "cordis.patch.yml"]
+}
+```
+
+- 用 SVG，跟随主题时优先用 `currentColor`；
+- 图标文件必须进 `files`，否则 npm 包里没有；
+- README 首屏放一张能说明效果的截图或 social preview，转化率差别很大；
+- 可选徽章：npm version、仓库 star、Hub 收录状态。
+
+## 可选 peer 依赖
+
+前端/React 相关的 peer 不一定是必需的（不同版本 dsh 提供的模块不同）。用 `peerDependenciesMeta` 标成 optional，避免用户装出 peer 冲突：
+
+```jsonc
+{
+  "peerDependencies": {
+    "@deepseek-ai/dsh-client-ui-primitives": ">=0.2.2-rc.1",
+    "react": "^18.3.1"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-client-ui-primitives": { "optional": true },
+    "react": { "optional": true }
+  }
+}
+```
+
+## 上架与分发
+
+- 用户既可能在 **Add plugin 向导**里搜索安装，也可能走 CLI；两种路径都要在 README 写；
+- 安装与更新命令成对出现：`add` / `update`；
+- `description`、`keywords`、`hub.summary`、`locale.meta` 四处保持一致，否则搜索命中率低；
+- 多语言 README（中/英至少各一份）会显著扩大受众。
+
+## 许可证选择会影响别人能否复用
+
+- MIT / Apache-2.0：允许商业使用与二次开发，生态友好；
+- GPL：衍生插件也必须开源，很多团队会因此不用；
+- 插件依赖的第三方代码、素材、字体要单独标注来源与许可证；
+- 从别的插件借鉴实现时，先看它的许可证——**看懂思路可以，复制代码要谨慎**。
